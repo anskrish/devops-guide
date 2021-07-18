@@ -18,7 +18,7 @@ resource "aws_vpc_peering_connection" "vpn-peering" {
 }
 
 resource "aws_route" "peering_private_route_vpn" {
-  count = var.create_vpc && var.enable_peer_with_vpn ? 1 : 0
+  count = var.create_vpc && var.enable_peer_with_vpn && length(var.private_subnets) > 0 ? 1 : 0
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = var.vpn_peer_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.vpn-peering[count.index].id
@@ -72,7 +72,7 @@ resource "aws_vpc_peering_connection" "systems-peering" {
 }
 
 resource "aws_route" "peering_private_route_systems" {
-  count = var.create_vpc && var.enable_peer_with_systems ? 1 : 0
+  count = var.create_vpc && var.enable_peer_with_systems && length(var.private_subnets) > 0 ? 1 : 0
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = var.systems_peer_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.systems-peering[count.index].id
@@ -94,7 +94,7 @@ resource "aws_route" "peering_public_route_systems" {
 }
 
 resource "aws_route_table_association" "systems_private_peering" {
-  count = var.create_vpc && var.enable_peer_with_systems ? 1 : 0
+  count = var.create_vpc && var.enable_peer_with_systems && length(var.private_subnets) > 0 ? 1 : 0
   subnet_id = element(aws_subnet.private.*.id, count.index)
   route_table_id = aws_route_table.private[count.index].id
 }
