@@ -1,0 +1,70 @@
+definitions:
+  steps:
+    - step: &package-build-dev
+        name: Build
+        image: "node:16.14.0"
+        script:
+          - "source aws/dev.sh"
+          - "echo \"deploying on $env\""
+          - VAR="build-$BITBUCKET_BUILD_NUMBER"
+          - "echo \"export VAR=$VAR\" > set_env.sh"
+          - "cat set_env.sh"
+          - "source set_env.sh"
+          - "npm install"
+          - "mkdir packages"
+          - "touch packages/$VAR"
+          - "ls packages/"
+        artifacts: # defining the artifacts to be passed to each future step.
+          - packages/**
+    - step: &s3-upload-dev
+        name: Transfer to S3
+        image: amazon/aws-cli
+        script:
+          - "source aws/dev.sh"
+          - "echo \"deploying on $env\""
+          - VAR="build-$BITBUCKET_BUILD_NUMBER"
+          - "echo \"export VAR=$VAR\" > set_env.sh"
+          - "source set_env.sh"
+          - "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+          - "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+          - "export AWS_DEFAULT_REGION=\"us-east-1\""
+          - "aws s3 cp packages/$VAR s3://devcala/"
+    - step: &package-promote-qa
+        name: promote-qa
+        image: "amazon/aws-cli"
+        script:
+          - "source aws/qa.sh"
+          - "echo \"deploying on $env\""
+          - "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+          - "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+          - "export AWS_DEFAULT_REGION=\"us-east-1\""
+          - "mkdir packages"
+          - "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+          - "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+          - "export AWS_DEFAULT_REGION=\"us-east-1\""
+          - "aws s3 cp s3://devcala/$promote packages/"
+          - "aws s3 cp packages/$promote s3://qacala/"
+    - step: &package-promote-prod
+        name: promote-prod
+        image: "amazon/aws-cli"
+        script:
+          - "source aws/prod.sh"
+          - "echo \"deploying on $env\""
+          - "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+          - "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+          - "export AWS_DEFAULT_REGION=\"us-east-1\""
+          - "mkdir packages"
+          - "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+          - "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+          - "export AWS_DEFAULT_REGION=\"us-east-1\""
+          - "aws s3 cp s3://qacala/"
+          - "aws s3 cp packages/$VAR s3://prodcala/"
+pipelines:
+  branches: 
+    develop:
+      - step: *package-build-dev
+      - step: *s3-upload-dev
+    release:
+      - step: *package-promote-qa
+    main:
+      - step: *package-promote-prod
