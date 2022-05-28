@@ -1,0 +1,15 @@
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 4.22.0, < 5.0"
+    }
+  }
+
+  provider_meta "google-beta" {
+    module_name = "blueprints/terraform/terraform-google-sql-db:mssql/v10.1.0"
+  }
+
+}
