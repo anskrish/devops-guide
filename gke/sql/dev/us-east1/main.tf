@@ -18,8 +18,8 @@ module "mssql" {
   name                 = var.name
   random_instance_name = true
   project_id           = var.project_id
-  user_name            = "belktest"
-  user_password        = "belkrootadmin87983"
+  user_name            = "btest"
+  user_password        = "brootadmin87983"
 
   deletion_protection = false
 }
