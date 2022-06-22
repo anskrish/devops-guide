@@ -21,6 +21,9 @@ resource "random_id" "suffix" {
   byte_length = 5
 }
 
+data "google_compute_network" "my-network" {
+  name = "default"
+}
 locals {
   network_name = "${var.network_name}-safer-${random_id.suffix.hex}"
 }
@@ -56,7 +59,7 @@ module "private_mysql" {
   ]
 
   assign_public_ip   = "true"
-#  vpc_network        = module.network-safer-mysql-simple.network_self_link
+  vpc_network        = data.google_compute_network.my-network.id
 #  allocated_ip_range = module.private-service-access.google_compute_global_address_name
 
   // Optional: used to enforce ordering in the creation of resources.
