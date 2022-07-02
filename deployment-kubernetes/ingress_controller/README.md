@@ -19,4 +19,4 @@ Execute the following in this order.
 6. TLS termination is deployed. We can access endpoint over https now.
 7. Route53 has to be updated to point to ingress controller.
 8. Execute `kubectl -n ingress-nginx get svc` to get the load balancer external IP.
-9. Add a `CNAME` record in the Route53 pointing to something like `*.service.dev.onx.ai` to rant access to all services on kubernetes using ingress controller.
+9. Add a `CNAME` record in the Route53 pointing to something like `*.service.dev.krishna.ai` to rant access to all services on kubernetes using ingress controller.
