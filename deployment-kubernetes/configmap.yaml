@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-service-dev
+  namespace: apps
+data:
+  PORT: "3000"
+  JWT_SECRET_KEY: "5DDNSxxxR@7234C"
+  FRONT_END_BASE_URL: "https://ui-krishna-dev.service.dev.krishna.ai"
+  SCHEDULER_BASE_URL: "https://scheduler.service.dev.krishna.ai"
+  HASURA_ENDPOINT: "http://hasura.service.dev.krishna.ai/v1/graphql"
+  POSTGRES_HOSTNAME: "postgres.dev.krishna.ai"
+  POSTGRES_USERNAME: "dev_user"
+  POSTGRES_PASSWORD: "DevUserRW123"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "krishna"
