@@ -11,6 +11,6 @@ data:
   HASURA_ENDPOINT: "http://hasura.service.dev.krishna.ai/v1/graphql"
   POSTGRES_HOSTNAME: "postgres.dev.krishna.ai"
   POSTGRES_USERNAME: "dev_user"
-  POSTGRES_PASSWORD: "DevUserRW123"
+  POSTGRES_PASSWORD: "xxxxxxx"
   POSTGRES_PORT: "5432"
   POSTGRES_DB: "krishna"
